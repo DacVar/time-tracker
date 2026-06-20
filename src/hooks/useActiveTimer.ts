@@ -63,7 +63,7 @@ export function useActiveTimer(userId: string | undefined) {
 
     const { data, error } = await supabase
       .from('time_entries')
-      .insert({ task_id: taskId, source: 'timer' })
+      .insert({ task_id: taskId, user_id: userId, source: 'timer' })
       .select('id, task_id, started_at')
       .single()
 

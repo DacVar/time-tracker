@@ -56,6 +56,7 @@ export function TaskManualEntryDialog({ open, onOpenChange, task, onSaved }: Pro
 
     const { error } = await supabase.from('time_entries').insert({
       task_id: task.id,
+      user_id: task.user_id,
       started_at: startedAt.toISOString(),
       ended_at: endedAt.toISOString(),
       duration_seconds: totalSeconds,

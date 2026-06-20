@@ -31,8 +31,10 @@ export function ManualEntryDialog({ tasks, onSaved }: Props) {
     const startedAt = new Date(`${date}T09:00:00`)
     const endedAt = new Date(startedAt.getTime() + totalSeconds * 1000)
 
+    const selectedTask = tasks.find(t => t.id === taskId)
     const { error } = await supabase.from('time_entries').insert({
       task_id: taskId,
+      user_id: selectedTask?.user_id,
       started_at: startedAt.toISOString(),
       ended_at: endedAt.toISOString(),
       duration_seconds: totalSeconds,
