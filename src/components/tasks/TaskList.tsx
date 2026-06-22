@@ -5,11 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
 import { Task, Category } from '@/types'
-import { Plus, Pencil, Archive, Play, Square, Clock } from 'lucide-react'
+import { Plus, Pencil, Archive, Play, Square, Clock, History } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { TaskDialog } from './TaskDialog'
 import { TaskManualEntryDialog } from './TaskManualEntryDialog'
+import { TaskEntriesDialog } from './TaskEntriesDialog'
 import { useActiveTimer } from '@/hooks/useActiveTimer'
 
 type Props = {
@@ -35,6 +36,7 @@ export function TaskList({ tasks, categories, userId, onChanged }: Props) {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [manualTask, setManualTask] = useState<Task | null>(null)
+  const [historyTask, setHistoryTask] = useState<Task | null>(null)
 
   const groups = useMemo<Group[]>(() => {
     const map = new Map<string | null, Group>()
@@ -211,6 +213,17 @@ export function TaskList({ tasks, categories, userId, onChanged }: Props) {
                               <Clock className="h-3.5 w-3.5" />
                             </Button>
 
+                            {/* History */}
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                              title="Ver registros"
+                              onClick={() => setHistoryTask(task)}
+                            >
+                              <History className="h-3.5 w-3.5" />
+                            </Button>
+
                             {/* Divider */}
                             <div className="w-px h-4 bg-border mx-0.5" />
 
@@ -262,6 +275,15 @@ export function TaskList({ tasks, categories, userId, onChanged }: Props) {
           onOpenChange={(open) => { if (!open) setManualTask(null) }}
           task={manualTask}
           onSaved={onChanged}
+        />
+      )}
+
+      {historyTask && (
+        <TaskEntriesDialog
+          open={!!historyTask}
+          onOpenChange={(open) => { if (!open) setHistoryTask(null) }}
+          task={historyTask}
+          onChanged={onChanged}
         />
       )}
     </>
